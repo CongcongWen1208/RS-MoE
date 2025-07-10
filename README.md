@@ -1,4 +1,4 @@
-# [RSMoE: A Vision–Language Model With Mixture of Experts for Remote Sensing Image Captioning and Visual Question Answering](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10909568) 
+# [RS-MoE: A Vision–Language Model With Mixture of Experts for Remote Sensing Image Captioning and Visual Question Answering](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10909568) 
 
 > 👨‍💻 **Authors**: Hui Lin*, Danfeng Hong*, Shuhang Ge*, Chuyao Luo, Kai Jiang, Hao Jin, and [Congcong Wen](https://wencc.xyz)<sup>†</sup>  
 > <sup>*</sup> Equal Contribution &nbsp;&nbsp;&nbsp; <sup>†</sup> Corresponding Author.
