@@ -32,3 +32,125 @@ Please kindly cite the papers if this code is useful and helpful for your resear
   publisher={IEEE}
 }
 ```
+
+---
+
+## 🛠️ Implementation Guide
+
+# RS-MoE Project Organization
+
+This folder contains all the essential files needed to run the InstructBLIP training pipeline based on `run_finetune_instructblip_experiments.sh`.
+
+## Directory Structure
+
+### 📁 scripts/
+**Core training scripts and configurations**
+- `train.py` - Main training script (entry point)
+- `run_finetune_instructblip_experiments.sh` - Bash script to run experiments
+- `finetune_instructblip_iconqa_33.yaml` - Main configuration file for IconQA training
+- Other training configuration files (*.yaml)
+
+### 📁 models/
+**All model-related files**
+- `blip2_models/` - BLIP2 architecture implementations
+  - `blip2_vicuna_instruct_lora.py` - Main model used in training (Vicuna-13B with LoRA)
+  - `blip2.py` - Base BLIP2 implementation
+  - `Qformer.py` - Q-Former implementation
+  - `modeling_llama.py` - Llama/Vicuna model implementations
+  - Other BLIP2 variants
+- `blip_models/` - Original BLIP models
+- `clip_models/` - CLIP vision encoder
+- `eva_vit.py` - EVA vision transformer
+- `base_model.py` - Base model class
+
+### 📁 lavis/
+**Core LAVIS framework components**
+
+#### 🔧 common/
+- `config.py` - Configuration management
+- `registry.py` - Model/task/dataset registry
+- `dist_utils.py` - Distributed training utilities
+- `logger.py` - Logging utilities
+- `optims.py` - Optimizers and schedulers
+- `utils.py` - General utilities
+- `vqa_tools/` - VQA evaluation tools
+
+#### 📊 datasets/
+- `builders/` - Dataset builder classes
+  - `vqa_builder.py` - VQA dataset builders (includes IconQA)
+- `datasets/` - Dataset implementations
+  - `iconqa_datasets.py` - IconQA dataset class
+  - `base_dataset.py` - Base dataset class
+- `data_utils.py` - Data processing utilities
+
+#### 🎯 tasks/
+- `base_task.py` - Base task class
+- `vqa.py` - VQA task implementation (includes IconQATask)
+- `captioning.py` - Image captioning tasks
+- Other task implementations
+
+#### 🔄 processors/
+- `blip_processors.py` - Image and text processors for BLIP
+- `base_processor.py` - Base processor class
+- Image preprocessing and text tokenization
+
+#### 🏃 runners/
+- `runner_base.py` - Main training runner
+- `runner_iter.py` - Iteration-based runner
+- Training loop implementations
+
+#### 📋 Config Files
+- `defaults.yaml` - IconQA dataset configuration
+- `blip2_instruct_vicuna13b_lora.yaml` - Model configuration
+- `__init__.py` - Package initialization
+
+### 📁 requirements/
+- `requirements.txt` - Python package dependencies
+
+## Key Model Architecture
+
+The training uses **BLIP2-Vicuna-Instruct-LoRA** architecture:
+
+1. **Visual Encoder**: EVA-CLIP-G (frozen)
+2. **Q-Former**: 32 query tokens for visual-text alignment
+3. **Language Model**: Vicuna-13B with LoRA fine-tuning
+4. **Dataset**: IconQA for remote sensing VQA
+5. **Training**: LoRA applied to FFN layers only (rank=1)
+
+## How to Use
+
+1. **Set up environment**:
+   ```bash
+   pip install -r requirements/requirements.txt
+   ```
+
+2. **Run training**:
+   ```bash
+   # From the scripts folder
+   bash run_finetune_instructblip_experiments.sh <benchmark> <experiment>
+   ```
+   
+   Or directly:
+   ```bash
+   python train.py --cfg-path finetune_instructblip_iconqa_33.yaml
+   ```
+
+3. **Key configuration parameters** (in `finetune_instructblip_iconqa_33.yaml`):
+   - Model: `blip2_vicuna_instruct_lora` 
+   - Base LLM: `vicuna13b`
+   - LoRA rank: 1
+   - LoRA target: FFN layers (`gate_proj`, `up_proj`, `down_proj`)
+   - Batch size: 1
+   - Learning rate: 1e-5
+   - Epochs: 50
+
+## Dependencies
+
+This is a **complete, self-contained** copy of all files needed to run the training pipeline. No additional files from the original RS-MoE repository are required.
+
+## For MoE Implementation
+
+This current setup represents the **baseline architecture** that needs to be extended with Mixture of Experts components according to the RS-MoE paper. The MoE architecture is not yet implemented in these files.
+
+---
+*Generated: $(Get-Date -Format "yyyy-MM-dd HH:mm")*
